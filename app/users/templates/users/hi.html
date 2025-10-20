@@ -1,15 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Hello, {{ name }}!</h1>
-<p>Age: {{ age }}</p>
+<div style="display:flex; font-family: Arial, sans-serif; margin-top: 20px;">
 
-<!-- Вертикальне меню тільки для цієї сторінки -->
-<nav style="float:left; width:150px; margin-right:20px;">
-    <ul>
-        <li><a href="{{ url_for('users.greetings', name='John', age=30) }}">Hi John</a></li>
-        <li><a href="{{ url_for('users.admin_redirect') }}">Admin</a></li>
-        <li><a href="{{ url_for('products.products_index') }}">Products</a></li>
-    </ul>
-</nav>
+    <!-- Вертикальне меню тільки для цієї сторінки -->
+    <nav style="width:180px; padding:15px; background-color:#333; color:#fff; border-radius:8px;">
+        <ul style="list-style:none; padding:0; margin:0;">
+            <li style="margin-bottom:10px;">
+                <a href="{{ url_for('users.greetings', name='John', age=30) }}"
+                   style="color:#ffcc80; text-decoration:none; display:block; padding:5px; border-radius:4px; transition:0.3s;">
+                   Hi John
+                </a>
+            </li>
+            <li style="margin-bottom:10px;">
+                <a href="{{ url_for('users.admin_redirect') }}"
+                   style="color:#ffcc80; text-decoration:none; display:block; padding:5px; border-radius:4px; transition:0.3s;">
+                   Admin
+                </a>
+            </li>
+            <li style="margin-bottom:10px;">
+                <a href="{{ url_for('products.products_index') }}"
+                   style="color:#ffcc80; text-decoration:none; display:block; padding:5px; border-radius:4px; transition:0.3s;">
+                   Products
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Основний контент -->
+    <div style="flex-grow:1; padding:20px; background-color:#f9f9f9; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+        <h1 style="color:#ff9800;">Hello, {{ name }}!</h1>
+        <p style="font-size:1.1em;">Age: {{ age }}</p>
+    </div>
+
+</div>
+
+<!-- Додатковий hover ефект для меню -->
+<style>
+nav ul li a:hover {
+    background-color:#ff9800;
+    color:#1a1a1a;
+}
+</style>
 {% endblock %}
