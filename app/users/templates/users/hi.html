@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Hello {{ name }}{% endblock %}
+
+{% block content %}
+<div style="display:flex;">
+
+    <!-- Вертикальне меню -->
+    <nav style="width:150px; margin-right:20px;">
+        <ul>
+            <li><a href="{{ url_for('users.greetings', name='John', age=30) }}">Greet John</a></li>
+            <li><a href="{{ url_for('users.admin') }}">Admin</a></li>
+        </ul>
+    </nav>
+
+    <!-- Основний контент -->
+    <div>
+        <h1>Hello, {{ name }}!</h1>
+        <p>Age: {{ age }}</p>
+    </div>
+
+</div>
+{% endblock %}
