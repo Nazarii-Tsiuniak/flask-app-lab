@@ -1,23 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Hello {{ name }}{% endblock %}
-
 {% block content %}
-<div style="display:flex;">
+<h1>Hello, {{ name }}!</h1>
+<p>Age: {{ age }}</p>
 
-    <!-- Вертикальне меню -->
-    <nav style="width:150px; margin-right:20px;">
-        <ul>
-            <li><a href="{{ url_for('users.greetings', name='John', age=30) }}">Greet John</a></li>
-            <li><a href="{{ url_for('users.admin') }}">Admin</a></li>
-        </ul>
-    </nav>
-
-    <!-- Основний контент -->
-    <div>
-        <h1>Hello, {{ name }}!</h1>
-        <p>Age: {{ age }}</p>
-    </div>
-
-</div>
+<!-- Вертикальне меню тільки для цієї сторінки -->
+<nav style="float:left; width:150px; margin-right:20px;">
+    <ul>
+        <li><a href="{{ url_for('users.greetings', name='John', age=30) }}">Hi John</a></li>
+        <li><a href="{{ url_for('users.admin_redirect') }}">Admin</a></li>
+        <li><a href="{{ url_for('products.products_index') }}">Products</a></li>
+    </ul>
+</nav>
 {% endblock %}
