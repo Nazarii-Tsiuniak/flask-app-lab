@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="project-detail mt-4">
+    <h1>{{ project.name }}</h1>
+    <p>{{ project.content }}</p>
+
+    <h5>Основні характеристики:</h5>
+    <ul>
+        <li><strong>Опис:</strong> {{ project.description }}</li>
+        <li><strong>Технології:</strong> {{ project.tech | join(', ') }}</li>
+        <li><strong>Статус:</strong> {{ project.status }}</li>
+        <li><strong>Дата:</strong> {{ project.date }}</li>
+    </ul>
+
+    {% if project.links %}
+    {% endif %}
+
+    <a href="{{ url_for('products.products') }}" class="btn btn-secondary mt-3">Назад до проєктів</a>
+</div>
+{% endblock %}

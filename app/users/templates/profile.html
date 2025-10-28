@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Профіль{% endblock %}
+
+{% block content %}
+<h1>Привіт, {{ user }}!</h1>
+
+<h3>Вибір теми:</h3>
+<a class="btn btn-light me-2" href="{{ url_for('users.change_theme', theme='light') }}">Світла 🌞</a>
+<a class="btn btn-dark" href="{{ url_for('users.change_theme', theme='dark') }}">Темна 🌙</a>
+
+<hr>
+
+<h3>Кукі користувача</h3>
+
+<form method="POST" action="{{ url_for('users.set_cookie') }}" class="mb-3 d-flex flex-wrap align-items-center">
+    <input type="text" name="key" placeholder="Ключ" required>
+    <input type="text" name="value" placeholder="Значення" required>
+    <button class="btn btn-success" type="submit">Додати кукі</button>
+</form>
+
+<form method="POST" action="{{ url_for('users.delete_cookie') }}" class="d-flex flex-wrap align-items-center gap-2">
+    <input type="text" name="key" placeholder="Ключ для видалення">
+    <button class="btn btn-danger" type="submit">Видалити кукі</button>
+    <button class="btn btn-warning" type="submit" name="key" value="">Видалити всі</button>
+</form>
+
+
+<h4>Поточні кукі:</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ключ</th>
+            <th>Значення</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k, v in cookies.items() %}
+            <tr>
+                <td>{{ k }}</td>
+                <td>{{ v }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Проєкти{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Мої проєкти</h1>
+
+<div class="row">
+{% for project in projects %}
+    <div class="col-md-6 col-lg-4">
+        <div class="project-card">
+            <div class="project-card-header">{{ project.name }}</div>
+            <div class="project-card-body">
+                <p><strong>Опис:</strong> {{ project.description }}</p>
+                <p><strong>Технології:</strong> {{ project.tech | join(', ') }}</p>
+                <p><strong>Статус:</strong> {{ project.status }}</p>
+                <p><strong>Дата:</strong> {{ project.date }}</p>
+            </div>
+            <div class="project-card-footer">
+                <a href="{{ url_for('products.detail_post', id=project.id) }}" class="btn btn-success">Деталі</a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Резюме{% endblock %}
+
+{% block content %}
+<section class="text-center mb-4">
+    <img src="{{ url_for('static', filename='images/photo.jpg') }}" class="rounded-circle shadow-sm mb-3" width="160" height="160" alt="Моє фото">
+    <h1>Назарій Цюняк</h1>
+    <p class="lead text-muted">Студент. Python / Flask / SQL</p>
+</section>
+
+<section id="about" class="mb-5">
+    <h2>Про себе</h2>
+    <p>Прагну створювати сучасні веб-інтерфейси, використовую Flask та SQL Server. Люблю технічні виклики та інновації.</p>
+</section>
+
+<section id="education" class="mb-5">
+    <h2>Освіта</h2>
+    <ul>
+        <li>Карпатський національний університет імені Василя Стефаника — Інженерія програмного забезпечення</li>
+    </ul>
+</section>
+
+<section id="skills" class="mb-5">
+    <h2>Навички</h2>
+    <ul>
+        <li>Python, Flask, Jinja2</li>
+        <li>HTML5, CSS, JavaScript, Bootstrap</li>
+        <li>GitHub, SQL Server, Qt, C++</li>
+    </ul>
+</section>
+
+<section id="projects" class="mb-5">
+    <h2>Проекти</h2>
+    <ul>
+        <li>Qt-калькулятор — настільна програма для обчислень</li>
+        <li>COCOMO калькулятор — веб-інструмент для оцінки складності проєктів</li>
+    </ul>
+</section>
+
+<section id="technologies" class="mb-5">
+    <h2>Технології</h2>
+    <p>VS Code, GitHub, Figma, SQL Server Management</p>
+</section>
+{% endblock %}

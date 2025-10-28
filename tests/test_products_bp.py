@@ -1,21 +1,23 @@
+# tests/test_products_views.py
 import unittest
 from app import create_app
 
-class ProductsBlueprintTestCase(unittest.TestCase):
+class ProductsViewsTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
-        self.app.config["TESTING"] = True
         self.client = self.app.test_client()
+        self.app.testing = True
 
-    def test_products_home(self):
-        response = self.client.get("/products/")  # обов'язково префікс Blueprint
+    def test_products_list_page(self):
+        response = self.client.get('/products')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Products Home", response.data)  # текст у відповіді
+        self.assertIn("Портфоліо сайт".encode('utf-8'), response.data)
 
-    def test_products_item(self):
-        response = self.client.get("/products/1")  # правильно для твого Blueprint
+    def test_product_detail_page(self):
+        response = self.client.get('/products/1')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Product 1", response.data)  # текст у відповіді
+        self.assertIn("Сайт для демонстрації моїх робіт".encode('utf-8'), response.data)
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_product_detail_not_found(self):
+        response = self.client.get('/products/999')
+        self.assertEqual(response.status_code, 404)
