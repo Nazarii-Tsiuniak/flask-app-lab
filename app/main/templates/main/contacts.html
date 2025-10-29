@@ -1,20 +1,32 @@
 {% extends "base.html" %}
+{% import "main/macros.html" as macros %}
+
 {% block title %}Контакти{% endblock %}
 
 {% block content %}
 <h2>Контакти</h2>
-<p>Email: example@gmail.com</p>
-<p>Телефон: +380 00 000 0000</p>
 
-<form>
-    <div class="mb-3">
-        <label for="name" class="form-label">Ім'я</label>
-        <input type="text" class="form-control" id="name">
-    </div>
-    <div class="mb-3">
-        <label for="message" class="form-label">Повідомлення</label>
-        <textarea class="form-control" id="message"></textarea>
-    </div>
+<!-- Flash повідомлення -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form method="POST" novalidate>
+    {{ form.csrf_token }}
+    
+    {{ macros.render_field(form.name) }}
+    {{ macros.render_field(form.email) }}
+    {{ macros.render_field(form.phone) }}
+    {{ macros.render_field(form.subject) }}
+    {{ macros.render_field(form.message) }}
+
     <button type="submit" class="btn btn-primary">Відправити</button>
 </form>
 {% endblock %}

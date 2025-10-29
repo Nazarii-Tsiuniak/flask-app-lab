@@ -1,0 +1,63 @@
+2025-10-28 19:17:44,852 - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-28 19:17:44,852 - werkzeug - [33mPress CTRL+C to quit[0m
+2025-10-28 19:17:44,853 - werkzeug -  * Restarting with stat
+2025-10-28 19:17:45,129 - werkzeug -  * Debugger is active!
+2025-10-28 19:17:45,131 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:18:38,828 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:18:38] "[35m[1mGET /contacts HTTP/1.1[0m" 500 -
+2025-10-28 19:18:38,906 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:18:38] "GET /contacts?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-10-28 19:18:38,906 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:18:38] "GET /contacts?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-10-28 19:18:38,945 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:18:38] "GET /contacts?__debugger__=yes&cmd=resource&f=console.png&s=J94w69EPjBF4NdabyaMa HTTP/1.1" 200 -
+2025-10-28 19:18:39,192 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:18:39] "GET /contacts?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-10-28 19:20:41,895 - werkzeug -  * Detected change in 'C:\\Users\\User\\flask_app_Tsiuniak\\run.py', reloading
+2025-10-28 19:20:41,950 - werkzeug -  * Restarting with stat
+2025-10-28 19:20:42,253 - werkzeug -  * Debugger is active!
+2025-10-28 19:20:42,255 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:20:46,086 - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-28 19:20:46,087 - werkzeug - [33mPress CTRL+C to quit[0m
+2025-10-28 19:20:46,088 - werkzeug -  * Restarting with stat
+2025-10-28 19:20:46,367 - werkzeug -  * Debugger is active!
+2025-10-28 19:20:46,370 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:21:41,961 - werkzeug -  * Detected change in 'C:\\Users\\User\\flask_app_Tsiuniak\\run.py', reloading
+2025-10-28 19:21:41,997 - werkzeug -  * Restarting with stat
+2025-10-28 19:21:42,316 - werkzeug -  * Debugger is active!
+2025-10-28 19:21:42,318 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:21:45,607 - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-28 19:21:45,607 - werkzeug - [33mPress CTRL+C to quit[0m
+2025-10-28 19:21:45,609 - werkzeug -  * Restarting with stat
+2025-10-28 19:21:45,887 - werkzeug -  * Debugger is active!
+2025-10-28 19:21:45,889 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:21:49,061 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:21:49] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-10-28 19:21:49,136 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:21:49] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-10-28 19:21:49,137 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:21:49] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-10-28 19:21:49,485 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:21:49] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=nFYtKRiz8uR6u92RODyc HTTP/1.1" 200 -
+2025-10-28 19:21:49,741 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:21:49] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-10-28 19:24:27,866 - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-28 19:24:27,866 - werkzeug - [33mPress CTRL+C to quit[0m
+2025-10-28 19:24:27,867 - werkzeug -  * Restarting with stat
+2025-10-28 19:24:28,151 - werkzeug -  * Debugger is active!
+2025-10-28 19:24:28,153 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:24:30,568 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:24:30] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-10-28 19:24:30,627 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:24:30] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-10-28 19:24:30,636 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:24:30] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-10-28 19:24:30,670 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:24:30] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=UMQy3HVSnXFGSSPObUCl HTTP/1.1" 200 -
+2025-10-28 19:25:12,121 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:25:12] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-10-28 19:25:12,138 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:25:12] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-10-28 19:25:12,140 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:25:12] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-10-28 19:25:12,150 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:25:12] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png&s=UMQy3HVSnXFGSSPObUCl HTTP/1.1[0m" 304 -
+2025-10-28 19:26:01,202 - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-28 19:26:01,202 - werkzeug - [33mPress CTRL+C to quit[0m
+2025-10-28 19:26:01,203 - werkzeug -  * Restarting with stat
+2025-10-28 19:26:01,480 - werkzeug -  * Debugger is active!
+2025-10-28 19:26:01,482 - werkzeug -  * Debugger PIN: 508-608-372
+2025-10-28 19:26:04,292 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:04] "GET / HTTP/1.1" 200 -
+2025-10-28 19:26:04,359 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:04] "[36mGET /static/css/mystyles.css HTTP/1.1[0m" 304 -
+2025-10-28 19:26:04,365 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:04] "[36mGET /static/images/photo.jpg HTTP/1.1[0m" 304 -
+2025-10-28 19:26:10,046 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:10] "[35m[1mGET /contacts HTTP/1.1[0m" 500 -
+2025-10-28 19:26:10,063 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:10] "[36mGET /contacts?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-10-28 19:26:10,064 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:10] "[36mGET /contacts?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-10-28 19:26:10,071 - werkzeug - 127.0.0.1 - - [28/Oct/2025 19:26:10] "GET /contacts?__debugger__=yes&cmd=resource&f=console.png&s=5yPE67S7Z8yc0ymqfthA HTTP/1.1" 200 -

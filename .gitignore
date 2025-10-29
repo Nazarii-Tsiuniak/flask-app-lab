@@ -4,6 +4,7 @@
 .venv*/
 venv*/
 **/pycache/
+__pycache__/
 pycache/
 dist/
 .coverage*
