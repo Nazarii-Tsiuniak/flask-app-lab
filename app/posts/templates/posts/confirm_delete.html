@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('post_bp.static', filename='css/posts.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Delete Post</h2>
+<p>Are you sure you want to delete: <strong>{{ post.title }}</strong>?</p>
+
+<form method="POST">
+    <button type="submit" class="button delete-btn">Delete</button>
+    <a href="{{ url_for('post_bp.post_detail', id=post.id) }}" class="button cancel-btn">Cancel</a>
+</form>
+{% endblock %}

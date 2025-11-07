@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="project-card">
+        <div class="project-card-header">{{ post.title }}</div>
+        <div class="project-card-body">
+          <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Post Image">
+            <div class="meta">{{ post.category }} | {{ post.posted.strftime('%Y-%m-%d %H:%M') }}</div>
+            <p>{{ post.content }}</p>
+        </div>
+        <div class="project-card-footer">
+            <a href="{{ url_for('post_bp.edit_post', id=post.id) }}" class="btn btn-success">Редагувати</a>
+            <a href="{{ url_for('post_bp.delete_post', id=post.id) }}" class="btn btn-dark">Видалити</a>
+            <a href="{{ url_for('post_bp.list_posts') }}" class="btn btn-light">Назад</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

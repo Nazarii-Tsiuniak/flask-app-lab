@@ -36,7 +36,7 @@ projects = [
     }
 ]
 
-@products_bp.route('/products')
+@products_bp.route('/')
 def products():
     return render_template('products/products.html', projects=projects)
 
