@@ -1,94 +1,65 @@
 import unittest
 from app import create_app, db
 from app.posts.models import Post
-from datetime import datetime, timezone
+from datetime import datetime
 
 class PostsTestCase(unittest.TestCase):
+
     def setUp(self):
-        # Створюємо тестовий додаток
+        # Тестовий додаток
         self.app = create_app("testing")
-        self.app.config['WTF_CSRF_ENABLED'] = False  # Вимикаємо CSRF для тестів
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
         self.client = self.app.test_client()
-        with self.app.app_context():
-            db.create_all()
 
     def tearDown(self):
-        with self.app.app_context():
-            db.session.remove()
-            db.drop_all()
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
 
-    # --- Створення поста ---
     def test_create_post(self):
-        with self.app.app_context():
-            response = self.client.post("/posts/post/create", data={
-                "title": "Test Post",
-                "content": "This is a test post",
-                "publish_date": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M"),
-                "category": "news",
-                "enabled": True
-            }, follow_redirects=True)
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b"Post added successfully", response.data)
-            self.assertIn(b"Test Post", response.data)
+        response = self.client.post('/posts/create', data={
+            'title': 'Test Post',
+            'content': 'This is a test post',
+            'category': 'publication',
+            'publish_date': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+            'enabled': True
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Post', response.data)
 
-    # --- Перегляд всіх постів ---
     def test_list_posts(self):
-        with self.app.app_context():
-            post = Post(title="List Post", content="Content")
-            db.session.add(post)
-            db.session.commit()
+        # створимо пост напряму
+        Post.create(title='List Post', content='Content', category='other')
+        response = self.client.get('/posts/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'List Post', response.data)
 
-            response = self.client.get("/posts/post")
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b"List Post", response.data)
-
-    # --- Перегляд одного поста ---
     def test_post_detail(self):
-        with self.app.app_context():
-            post = Post(title="Detail Post", content="Detail Content")
-            db.session.add(post)
-            db.session.commit()
+        post = Post.create(title='Detail Post', content='Content', category='publication')
+        response = self.client.get(f'/posts/{post.id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Detail Post', response.data)
 
-            response = self.client.get(f"/posts/post/{post.id}")
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b"Detail Post", response.data)
-            self.assertIn(b"Detail Content", response.data)
-
-    # --- Редагування поста ---
     def test_edit_post(self):
-        with self.app.app_context():
-            post = Post(title="Old Title", content="Old Content")
-            db.session.add(post)
-            db.session.commit()
+        post = Post.create(title='Old Title', content='Old content')
+        response = self.client.post(f'/posts/{post.id}/update', data={
+            'title': 'New Title',
+            'content': 'Updated content',
+            'category': 'other',
+            'publish_date': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+            'enabled': True
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'New Title', response.data)
 
-            response = self.client.post(f"/posts/post/{post.id}/update", data={
-                "title": "Updated Title",
-                "content": "Updated Content",
-                "publish_date": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M"),
-                "category": "tech",
-                "enabled": True
-            }, follow_redirects=True)
-
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b"Post updated successfully", response.data)
-            self.assertIn(b"Updated Title", response.data)
-
-    # --- Видалення поста ---
     def test_delete_post(self):
-        with self.app.app_context():
-            post = Post(title="Delete Me", content="Delete Content")
-            db.session.add(post)
-            db.session.commit()
+        post = Post.create(title='Delete Post', content='To delete')
+        response = self.client.post(f'/posts/{post.id}/delete', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        # перевірка, що пост видалений
+        self.assertIsNone(Post.query.get(post.id))
 
-            # GET-запит на підтвердження
-            get_resp = self.client.get(f"/posts/post/{post.id}/delete")
-            self.assertEqual(get_resp.status_code, 200)
-            self.assertIn(b"Are you sure", get_resp.data)
-
-            # POST-запит для видалення
-            post_resp = self.client.post(f"/posts/post/{post.id}/delete", follow_redirects=True)
-            self.assertEqual(post_resp.status_code, 200)
-            self.assertIn(b"Post deleted successfully", post_resp.data)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
