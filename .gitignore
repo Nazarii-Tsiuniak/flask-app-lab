@@ -12,3 +12,7 @@ htmlcov/
 .tox/
 docs/_build/
 *.log
+.env
+app/.env
+**/__pycache__/
+.pytest_cache/
