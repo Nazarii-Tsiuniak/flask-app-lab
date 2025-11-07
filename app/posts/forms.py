@@ -1,25 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, BooleanField, SubmitField, SelectField
-from wtforms.fields import DateTimeLocalField  # новий правильний імпорт
+from wtforms import StringField, TextAreaField, BooleanField, SelectField, DateTimeField, SubmitField
 from wtforms.validators import DataRequired, Length
+from datetime import datetime
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=150)])
     content = TextAreaField('Content', validators=[DataRequired()])
-    
-    # Випадаючий вибір дати та часу
-    publish_date = DateTimeLocalField(
-        'Publish Date', 
-        format='%Y-%m-%dT%H:%M',  # формат для datetime-local
-        default=None
-    )
-
+    category = SelectField('Category', choices=[('publication', 'Publication'), ('other', 'Other')])
+    publish_date = DateTimeField('Publish Date', default=datetime.utcnow)
     enabled = BooleanField('Enabled', default=True)
-
-    category = SelectField(
-        'Category',
-        choices=[('news', 'News'), ('publication', 'Publication'), ('tech', 'Tech'), ('other', 'Other'), ('General', 'General')],
-        default='General'
-    )
-
-    submit = SubmitField('Submit')
+    submit = SubmitField('Save')
