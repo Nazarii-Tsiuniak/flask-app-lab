@@ -9,6 +9,7 @@
     <h2>{{ 'Редагувати пост' if edit else 'Створити пост' }}</h2>
     <form method="POST">
         {{ form.hidden_tag() }}
+
         <div>
             {{ form.title.label }}<br>
             {{ form.title(class="form-control") }}
@@ -23,12 +24,23 @@
         </div>
         <div>
             {{ form.publish_date.label }}<br>
-            {{ form.publish_date(class="form-control") }}
+            {{ form.publish_date(class="form-control", type="date") }}
         </div>
         <div>
             {{ form.enabled.label }}<br>
             {{ form.enabled() }}
         </div>
+        <div>
+            {{ form.author_id.label }}<br>
+            {{ form.author_id(class="form-control") }}
+        </div>
+
+
+      <div>
+            {{ form.tags.label }}<br>
+            {{ form.tags(class="form-control", multiple=True) }}
+      </div>
+
         <br>
         <button type="submit" class="btn btn-success">{{ 'Оновити' if edit else 'Додати' }}</button>
     </form>

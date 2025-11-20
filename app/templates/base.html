@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Portfolio{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Твої кастомні стилі -->
     <link href="{{ url_for('static', filename='css/mystyles.css') }}" rel="stylesheet">
-    <body class="{% if request.cookies.get('theme') == 'dark' %}dark-theme{% endif %}">
+
     {% block head_extra %}{% endblock %}
 </head>
-<body class="{% if request.cookies.get('theme') == 'dark' %}dark-theme{% endif %}">
+<body class="{% if request.cookies.get('theme') == 'dark' %}dark-theme{% else %}light-theme{% endif %}">
+
     {% include 'navbar.html' %}
 
     <div class="container mt-4">
@@ -28,6 +33,8 @@
     </div>
 
     {% include 'footer.html' %}
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -245,3 +245,52 @@ h1 {
 .full-width {
     width: 100%;
 }
+/* ===== Теми (доповнення) ===== */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.project-card, .post-card {
+    background-color: var(--card-bg);
+    transition: all 0.3s ease;
+}
+
+.table {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.table th, .table td {
+    border-color: rgba(0,0,0,0.1);
+}
+
+/* Кнопки, які враховують теми */
+.btn-light {
+    background-color: var(--btn-light-bg);
+    color: var(--text-color);
+}
+
+.btn-dark {
+    background-color: var(--btn-dark-bg);
+    color: #fff;
+}
+
+.btn-success {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+/* При наведені */
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* Навігація та футер, якщо вони є */
+.navbar, .footer {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}

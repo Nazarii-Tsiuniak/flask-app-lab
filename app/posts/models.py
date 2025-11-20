@@ -1,5 +1,14 @@
 from app import db
 from datetime import datetime
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column
+
+# --- Асоціативна таблиця для Many-to-Many ---
+post_tags = db.Table(
+    'post_tags',
+    db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+)
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -10,39 +19,30 @@ class Post(db.Model):
     category = db.Column(db.String(50), nullable=True)
     posted = db.Column(db.DateTime, default=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
-    author = db.Column(db.String(50), default='Anonymous')
+
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author = relationship("User", back_populates="posts")
+
+    tags: Mapped[list["Tag"]] = relationship(
+        "Tag",
+        secondary=post_tags,
+        back_populates="posts"
+    )
 
     def __repr__(self):
         return f"<Post {self.title}>"
 
-    # --- Повернути активні пости ---
-    @classmethod
-    def active_posts(cls):
-        return cls.query.filter_by(is_active=True).order_by(cls.posted.desc())
+class Tag(db.Model):
+    __tablename__ = 'tags'
 
-    # --- Створення нового поста ---
-    @classmethod
-    def create(cls, title, content, category=None, author='Anonymous', is_active=True, posted=None):
-        post = cls(
-            title=title,
-            content=content,
-            category=category,
-            author=author,
-            is_active=is_active,
-            posted=posted or datetime.utcnow()
-        )
-        db.session.add(post)
-        db.session.commit()
-        return post
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(db.String(50), unique=True, nullable=False)
 
-    # --- Оновлення поста ---
-    def update(self, **kwargs):
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        db.session.commit()
+    posts: Mapped[list["Post"]] = relationship(
+        "Post",
+        secondary=post_tags,
+        back_populates="tags"
+    )
 
-    # --- Видалення поста ---
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+    def __repr__(self):
+        return f"<Tag {self.name}>"

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Login{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% import "main/macros.html" as macros %}
 
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-4">
-    <h2 class="text-center mb-4">Login</h2>
+    <h2 class="text-center mb-4">Register</h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -21,13 +21,13 @@
 
     <form method="POST" novalidate>
       {{ form.csrf_token }}
-      {{ macros.render_field(form.username_or_email) }}
+      {{ macros.render_field(form.username) }}
+      {{ macros.render_field(form.email) }}
       {{ macros.render_field(form.password) }}
-      {{ macros.render_field(form.remember) }}
-      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <button type="submit" class="btn btn-success w-100">Register</button>
     </form>
 
-    <p class="text-center mt-2">Ще немає акаунту? <a href="{{ url_for('users.register') }}">Зареєструватися</a></p>
+    <p class="text-center mt-2">Вже є акаунт? <a href="{{ url_for('users.login') }}">Увійти</a></p>
   </div>
 </div>
 {% endblock %}
