@@ -1,12 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}Register{% endblock %}
 
-{% import "main/macros.html" as macros %}
-
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-4">
-    <h2 class="text-center mb-4">Register</h2>
+  <div class="col-md-5">
+    <h2 class="text-center mb-4">Реєстрація</h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -21,13 +19,45 @@
 
     <form method="POST" novalidate>
       {{ form.csrf_token }}
-      {{ macros.render_field(form.username) }}
-      {{ macros.render_field(form.email) }}
-      {{ macros.render_field(form.password) }}
-      <button type="submit" class="btn btn-success w-100">Register</button>
+
+      <div class="mb-3">
+        {{ form.username.label(class="form-label") }}
+        {{ form.username(class="form-control", placeholder="Введіть username") }}
+        {% for error in form.username.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control", placeholder="Введіть email") }}
+        {% for error in form.email.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(class="form-control", placeholder="Введіть пароль") }}
+        {% for error in form.password.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.confirm_password.label(class="form-label") }}
+        {{ form.confirm_password(class="form-control", placeholder="Підтвердіть пароль") }}
+        {% for error in form.confirm_password.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">Зареєструватися</button>
     </form>
 
-    <p class="text-center mt-2">Вже є акаунт? <a href="{{ url_for('users.login') }}">Увійти</a></p>
+    <p class="text-center mt-3">
+      Вже є акаунт? <a href="{{ url_for('users.login') }}">Увійти</a>
+    </p>
   </div>
 </div>
 {% endblock %}

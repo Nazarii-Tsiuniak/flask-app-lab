@@ -2,13 +2,14 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager  
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 from dotenv import load_dotenv
-import os
 
 db = SQLAlchemy()
 migrate = Migrate()
-login_manager = LoginManager()          
+bcrypt = Bcrypt()
+login_manager = LoginManager()
 
 
 def create_app(config_name="development"):
@@ -23,22 +24,26 @@ def create_app(config_name="development"):
     }
     app.config.from_object(configs.get(config_name, DevelopmentConfig))
 
+    # Ініціалізація розширень
     db.init_app(app)
     migrate.init_app(app, db)
-
-    # 🔹 Імпорт моделей після db.init_app
-    from app.users.models import User
-    from app.posts.models import Post
-
-    # 🔹 Flask-Login
+    bcrypt.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = "users.login"     # куди ганяти неавторизованих
+
+    # Куди відправляти неавторизованих
+    login_manager.login_view = "users.login"
     login_manager.login_message_category = "warning"
 
+    # Імпорт моделей вже після init_app (щоб уникнути імпортного циклу)
+    from app.users.models import User
+    from app.posts.models import Post  # якщо потрібен
+
     @login_manager.user_loader
-    def load_user(user_id):
+    def load_user(user_id: str):
+        # повертає User або None
         return User.query.get(int(user_id))
 
+    # Регістрація блюпринтів
     from app.main import main_bp
     from app.products.views import products_bp
     from app.users.views import users_bp

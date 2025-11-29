@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>Користувачі ({{ count }})</h2>
+  {% if users %}
+    <ul class="list-group">
+      {% for u in users %}
+        <li class="list-group-item">{{ u.id }} — {{ u.username }} ({{ u.email }})</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Користувачів немає.</p>
+  {% endif %}
+</div>
+{% endblock %}
