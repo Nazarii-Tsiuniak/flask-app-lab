@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 
-from app import db, bcrypt
+from app import db
 from .models import User
 from .forms import LoginForm, RegisterForm, UpdateAccountForm, ChangePasswordForm
 
@@ -16,11 +16,10 @@ users_bp = Blueprint('users', __name__, template_folder='templates')
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(
             username=form.username.data,
             email=form.email.data,
-            password=hashed_password,
+            password=form.password.data,  # використовується setter
             image='profile_default.jpg'
         )
         db.session.add(new_user)
@@ -36,7 +35,7 @@ def login():
     if form.validate_on_submit():
         login_value = form.username_or_email.data
         user = User.query.filter((User.username == login_value) | (User.email == login_value)).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
+        if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember.data)
             flash('Вхід успішний!', 'success')
             return redirect(url_for('users.account'))
@@ -59,15 +58,12 @@ def account():
     return render_template('account.html', user=current_user)
 
 # -------------------- UPDATE ACCOUNT --------------------
-# -------------------- UPDATE ACCOUNT --------------------
 @users_bp.route('/update_account', methods=['GET', 'POST'])
 @login_required
 def update_account():
-    """Редагування даних користувача та фото профілю"""
     form = UpdateAccountForm()
 
     if request.method == 'GET':
-        # Заповнюємо форму поточними даними користувача
         form.username.data = current_user.username
         form.email.data = current_user.email
         form.about_me.data = current_user.about_me
@@ -77,7 +73,6 @@ def update_account():
         current_user.email = form.email.data
         current_user.about_me = form.about_me.data
 
-        # Обробка фото профілю
         if form.image.data:
             filename = secure_filename(form.image.data.filename)
             filepath = os.path.join(current_app.root_path, 'static/profile_pics', filename)
@@ -97,12 +92,10 @@ def update_account():
 def change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        # Використовуємо метод check_password() замість доступу до password
         if not current_user.check_password(form.old_password.data):
             flash('Поточний пароль введено невірно!', 'danger')
         else:
-            # Для запису нового пароля використовується property password
-            current_user.password = form.new_password.data
+            current_user.password = form.new_password.data  # setter
             db.session.commit()
             flash('Пароль успішно змінено!', 'success')
             return redirect(url_for('users.account'))
