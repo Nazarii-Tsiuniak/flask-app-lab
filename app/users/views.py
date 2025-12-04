@@ -1,11 +1,33 @@
 # app/users/views.py
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, make_response
-from .forms import LoginForm, RegisterForm
-from app.users.models import User
-from app import db
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, make_response
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
+from datetime import datetime
+import os
+
+from app import db, bcrypt
+from .models import User
+from .forms import LoginForm, RegisterForm, UpdateAccountForm, ChangePasswordForm
 
 users_bp = Blueprint('users', __name__, template_folder='templates')
+
+# -------------------- REGISTER --------------------
+@users_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password,
+            image='profile_default.jpg'
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Реєстрація успішна! Тепер можете увійти', 'success')
+        return redirect(url_for('users.login'))
+    return render_template('register.html', form=form)
 
 # -------------------- LOGIN --------------------
 @users_bp.route('/login', methods=['GET', 'POST'])
@@ -13,111 +35,88 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         login_value = form.username_or_email.data
-        password = form.password.data
-
         user = User.query.filter((User.username == login_value) | (User.email == login_value)).first()
-        if user and user.check_password(password):
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash('Вхід успішний!', 'success')
-            return redirect(url_for('users.profile'))
+            return redirect(url_for('users.account'))
         else:
             flash('Невірний логін або пароль', 'danger')
-            return redirect(url_for('users.login'))
-
     return render_template('login.html', form=form)
-
-# -------------------- REGISTER --------------------
-@users_bp.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        existing_user = User.query.filter(
-            (User.username == form.username.data) | (User.email == form.email.data)
-        ).first()
-        if existing_user:
-            flash('Користувач з таким username або email вже існує', 'warning')
-            return redirect(url_for('users.register'))
-
-        new_user = User(
-            username=form.username.data,
-            email=form.email.data
-        )
-        new_user.password = form.password.data  # property setter хешує пароль
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Реєстрація успішна! Тепер можете увійти', 'success')
-        return redirect(url_for('users.login'))
-
-    return render_template('register.html', form=form)
-
-# -------------------- PROFILE --------------------
-@users_bp.route('/profile')
-@login_required
-def profile():
-    user = current_user
-    theme = request.cookies.get('theme', 'light')
-    cookies = request.cookies.to_dict()
-    return render_template('profile.html', user=user, theme=theme, cookies=cookies)
 
 # -------------------- LOGOUT --------------------
 @users_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
-    session.pop('username', None)
     flash('Ви вийшли з системи', 'info')
     return redirect(url_for('users.login'))
 
-# -------------------- SET COOKIE --------------------
-@users_bp.route('/profile/set_cookie', methods=['POST'])
+# -------------------- ACCOUNT --------------------
+@users_bp.route('/account')
 @login_required
-def set_cookie():
-    key = request.form.get('key')
-    value = request.form.get('value')
-    resp = make_response(redirect(url_for('users.profile')))
-    if key and value:
-        resp.set_cookie(key, value)
-        flash(f'Кукі "{key}" встановлено', 'success')
-    else:
-        flash('Вкажіть ключ та значення', 'warning')
-    return resp
+def account():
+    return render_template('account.html', user=current_user)
 
-# -------------------- DELETE COOKIE --------------------
-@users_bp.route('/profile/delete_cookie', methods=['POST'])
+# -------------------- UPDATE ACCOUNT --------------------
+# -------------------- UPDATE ACCOUNT --------------------
+@users_bp.route('/update_account', methods=['GET', 'POST'])
 @login_required
-def delete_cookie():
-    key = request.form.get('key')
-    resp = make_response(redirect(url_for('users.profile')))
-    if key:
-        resp.delete_cookie(key)
-        flash(f'Кукі "{key}" видалено', 'info')
-    else:
-        for cookie_key in request.cookies.keys():
-            if cookie_key != 'session':
-                resp.delete_cookie(cookie_key)
-        flash('Всі кукі видалено', 'info')
-    return resp
+def update_account():
+    """Редагування даних користувача та фото профілю"""
+    form = UpdateAccountForm()
+
+    if request.method == 'GET':
+        # Заповнюємо форму поточними даними користувача
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+        form.about_me.data = current_user.about_me
+
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.about_me = form.about_me.data
+
+        # Обробка фото профілю
+        if form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            filepath = os.path.join(current_app.root_path, 'static/profile_pics', filename)
+            form.image.data.save(filepath)
+            current_user.image = filename
+
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
+        flash('Профіль оновлено!', 'success')
+        return redirect(url_for('users.account'))
+
+    return render_template('update_account.html', user=current_user, form=form)
+
+# -------------------- CHANGE PASSWORD --------------------
+@users_bp.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        # Використовуємо метод check_password() замість доступу до password
+        if not current_user.check_password(form.old_password.data):
+            flash('Поточний пароль введено невірно!', 'danger')
+        else:
+            # Для запису нового пароля використовується property password
+            current_user.password = form.new_password.data
+            db.session.commit()
+            flash('Пароль успішно змінено!', 'success')
+            return redirect(url_for('users.account'))
+    return render_template('change_password.html', form=form)
 
 # -------------------- CHANGE THEME --------------------
-@users_bp.route('/profile/theme/<string:theme>')
+@users_bp.route('/theme/<string:theme>')
 @login_required
 def change_theme(theme):
     if theme not in ['light', 'dark']:
         flash('Невідома тема', 'warning')
-        return redirect(url_for('users.profile'))
+        return redirect(url_for('users.account'))
 
-    resp = make_response(redirect(url_for('users.profile')))
+    resp = make_response(redirect(url_for('users.account')))
     resp.set_cookie('theme', theme)
     flash(f'Тема змінена на "{theme}"', 'success')
     return resp
-
-# -------------------- LIST ALL USERS --------------------
-@users_bp.route('/users')
-@login_required
-def list_users():
-    users = User.query.all()
-    theme = request.cookies.get('theme', 'light')
-    if not users:
-        flash('Користувачів поки немає', 'info')
-    return render_template('list_users.html', users=users, theme=theme)

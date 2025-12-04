@@ -3,6 +3,7 @@ from app import db, bcrypt
 from flask_login import UserMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
+from datetime import datetime
 
 if TYPE_CHECKING:
     from app.posts.models import Post
@@ -14,6 +15,10 @@ class User(UserMixin, db.Model):
     username: Mapped[str] = mapped_column(db.String(50), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(db.String(120), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(db.String(255), nullable=False)
+    
+    image: Mapped[str] = mapped_column(db.String(255), nullable=True, default='profile_default.jpg')
+    about_me: Mapped[str] = mapped_column(db.Text, nullable=True)
+    last_seen: Mapped[datetime] = mapped_column(db.DateTime, default=datetime.utcnow)
 
     posts: Mapped[list["Post"]] = relationship(
         "Post", back_populates="author", cascade="all, delete-orphan"

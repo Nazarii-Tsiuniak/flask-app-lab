@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагування профілю{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Редагування профілю</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+
+    <div class="mb-3">
+      {{ form.username.label(class="form-label") }}
+      {{ form.username(class="form-control") }}
+      {% for error in form.username.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.email.label(class="form-label") }}
+      {{ form.email(class="form-control") }}
+      {% for error in form.email.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.about_me.label(class="form-label") }}
+      {{ form.about_me(class="form-control") }}
+      {% for error in form.about_me.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.image.label(class="form-label") }}
+      {{ form.image(class="form-control") }}
+      {% for error in form.image.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-success">Зберегти зміни</button>
+    <a href="{{ url_for('users.account') }}" class="btn btn-secondary">Назад</a>
+  </form>
+</div>
+{% endblock %}

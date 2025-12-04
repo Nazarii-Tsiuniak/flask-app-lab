@@ -1,10 +1,17 @@
-{% extends 'base.html' %}
-{% block title %}Account{% endblock %}
+{% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container mt-4">
   <h2>Профіль користувача</h2>
-  <p><strong>Username:</strong> {{ user.username }}</p>
-  <p><strong>Email:</strong> {{ user.email }}</p>
-  <p><a class="btn btn-secondary" href="{{ url_for('users.all_users') }}">Переглянути всіх користувачів</a></p>
+  <div class="card" style="width: 18rem;">
+    <img src="{{ url_for('static', filename='profile_pics/' + user.image) }}" class="card-img-top" alt="Profile Picture">
+    <div class="card-body">
+      <h5 class="card-title">{{ user.username }}</h5>
+      <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+      <p class="card-text"><strong>Про себе:</strong> {{ user.about_me or 'Немає опису' }}</p>
+      <p class="card-text"><strong>Останній вхід:</strong> {{ user.last_seen }}</p>
+      <a href="{{ url_for('users.update_account') }}" class="btn btn-primary">Редагувати профіль</a>
+      <a href="{{ url_for('users.change_password') }}" class="btn btn-warning">Змінити пароль</a>
+    </div>
+  </div>
 </div>
 {% endblock %}

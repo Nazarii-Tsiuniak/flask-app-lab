@@ -1,13 +1,32 @@
 {% macro render_field(field) %}
 <div class="mb-3">
-    {{ field.label(class="form-label") }}
-    {{ field(class="form-control") }}
-    {% if field.errors %}
-        <div class="text-danger mt-1">
-            {% for error in field.errors %}
-                <div>{{ error }}</div>
-            {% endfor %}
+
+    {# Якщо це чекбокс — рендеримо по-іншому #}
+    {% if field.type == "BooleanField" %}
+        <div class="form-check">
+            {{ field(class="form-check-input") }}
+            {{ field.label(class="form-check-label") }}
         </div>
+
+        {% if field.errors %}
+            <div class="text-danger mt-1">
+                {% for error in field.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% else %}
+        {{ field.label(class="form-label") }}
+        {{ field(class="form-control") }}
+
+        {% if field.errors %}
+            <div class="text-danger mt-1">
+                {% for error in field.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endif %}
+
 </div>
 {% endmacro %}

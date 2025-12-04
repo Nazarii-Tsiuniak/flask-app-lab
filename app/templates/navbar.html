@@ -22,38 +22,44 @@
           <a class="nav-link" href="{{ url_for('main.contacts') }}">Контакти</a>
         </li>
 
-        {# ----- Якщо користувач авторизований ----- #}
         {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('users.profile') }}">
-              Профіль ({{ current_user.username }})
+          <!-- Профіль -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ current_user.username }}
             </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li>
+                <a class="dropdown-item" href="{{ url_for('users.account') }}">Профіль</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{{ url_for('users.update_account') }}">Редагувати профіль</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{{ url_for('users.change_password') }}">Змінити пароль</a>
+              </li>
+            </ul>
           </li>
 
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('users.logout') }}">Вийти</a>
           </li>
 
-          {# Перемикач теми #}
+          <!-- Перемикач теми -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="themeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Тема
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themeDropdown">
               <li>
-                <a class="dropdown-item" href="{{ url_for('users.change_theme', theme='light') }}">
-                  Світла
-                </a>
+                <a class="dropdown-item" href="{{ url_for('users.change_theme', theme='light') }}">Світла</a>
               </li>
               <li>
-                <a class="dropdown-item" href="{{ url_for('users.change_theme', theme='dark') }}">
-                  Темна
-                </a>
+                <a class="dropdown-item" href="{{ url_for('users.change_theme', theme='dark') }}">Темна</a>
               </li>
             </ul>
           </li>
 
-        {# ----- Якщо НЕ авторизований ----- #}
         {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('users.login') }}">Login</a>
