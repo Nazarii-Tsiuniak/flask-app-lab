@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ game.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Фото гри -->
+    <div class="col-md-6">
+      {% if game.image_filename %}
+        <img src="{{ url_for('static', filename='game_images/' + game.image_filename) }}" class="img-fluid" alt="{{ game.title }}">
+      {% else %}
+        <img src="{{ url_for('static', filename='img/default_game.png') }}" class="img-fluid" alt="{{ game.title }}">
+      {% endif %}
+    </div>
+
+    <!-- Інформація про гру -->
+    <div class="col-md-6">
+      <h2>{{ game.title }}</h2>
+      <p><strong>Жанр:</strong> {{ game.genre.name }}</p>
+      <p><strong>Опис:</strong><br>{{ game.description or 'Немає опису' }}</p>
+      <p><strong>Ціна:</strong> {{ game.price or 0 }} UAH</p>
+      <p><strong>Додано:</strong> {{ game.created_at.strftime('%d-%m-%Y %H:%M') }}</p>
+      <p><strong>Власник:</strong> {{ game.owner.username }}</p>
+
+      <!-- Редагування та видалення тільки для власника -->
+      {% if current_user.is_authenticated and current_user.id == game.owner_id %}
+        <a href="{{ url_for('games.edit_game', game_id=game.id) }}" class="btn btn-warning mb-2">Редагувати</a>
+
+        <form action="{{ url_for('games.delete_game', game_id=game.id) }}" method="post" style="display:inline;" onsubmit="return confirm('Видалити гру?');">
+          {{ delete_form.hidden_tag() }}
+          <button type="submit" class="btn btn-danger mb-2">Видалити</button>
+        </form>
+      {% endif %}
+
+      <br>
+      <a href="{{ url_for('games.list_games') }}" class="btn btn-secondary mt-2">Назад до списку</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

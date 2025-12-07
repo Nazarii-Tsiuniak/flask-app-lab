@@ -8,6 +8,7 @@ import os
 from app import db
 from .models import User
 from .forms import LoginForm, RegisterForm, UpdateAccountForm, ChangePasswordForm
+from PIL import Image 
 
 users_bp = Blueprint('users', __name__, template_folder='templates')
 
@@ -74,10 +75,21 @@ def update_account():
         current_user.about_me = form.about_me.data
 
         if form.image.data:
+            # Зберігаємо оригінал
             filename = secure_filename(form.image.data.filename)
             filepath = os.path.join(current_app.root_path, 'static/profile_pics', filename)
             form.image.data.save(filepath)
             current_user.image = filename
+
+            # Створюємо піктограму 128x128
+            output_size = (128, 128)
+            img = Image.open(filepath)
+            img.thumbnail(output_size)
+            thumb_filename = f"thumb_{filename}"
+            thumb_path = os.path.join(current_app.root_path, 'static/profile_pics', thumb_filename)
+            img.save(thumb_path)
+            # можна зберігати в моделі окреме поле thumb_image, якщо потрібно
+            # current_user.thumb_image = thumb_filename
 
         current_user.last_seen = datetime.utcnow()
         db.session.commit()

@@ -57,5 +57,9 @@ def create_app(config_name="development"):
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template("404.html"), 404
+    
+    from app.games.models import Game, Genre
+    from app.games.views import games_bp
+    app.register_blueprint(games_bp, url_prefix='/games')
 
     return app

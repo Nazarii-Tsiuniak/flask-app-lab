@@ -1,116 +1,60 @@
-import unittest
-from app import create_app, db
+from __future__ import with_statement
+from logging.config import fileConfig
+import logging
+
+from alembic import context
+from sqlalchemy import engine_from_config, pool
+from flask import current_app
+
+# Конфігурація Alembic
+config = context.config
+fileConfig(config.config_file_name)
+logger = logging.getLogger('alembic.env')
+
+# Доступ до метаданих моделей
+target_metadata = current_app.extensions['migrate'].db.metadata
+
+# ІМПОРТУЄМО ВСІ МОДЕЛІ щоб Alembic їх бачив
+from app.users.models import User
 from app.posts.models import Post
-from datetime import datetime
+from app.games.models import Game, Genre # <--- додано
+# Якщо додаси нові моделі — просто імпортуй сюди
 
-class PostsTestCase(unittest.TestCase):
- def setUp(self):
-    self.app = create_app("testing")
-    self.app.config['WTF_CSRF_ENABLED'] = False
-    self.client = self.app.test_client()
+def run_migrations_offline() -> None:
+    """Run migrations in 'offline' mode."""
+    url = current_app.config.get("SQLALCHEMY_DATABASE_URI")
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+    )
 
-    # Тепер імпортуємо і реєструємо блюпринт
-    from app.posts import post_bp
-    self.app.register_blueprint(post_bp, url_prefix="/posts")
-
-    with self.app.app_context():
-        db.create_all()
+    with context.begin_transaction():
+        context.run_migrations()
 
 
-    def tearDown(self):
-        with self.app.app_context():
-            db.session.remove()
-            db.drop_all()
+def run_migrations_online() -> None:
+    """Run migrations in 'online' mode."""
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+        url=current_app.config.get("SQLALCHEMY_DATABASE_URI"))
 
-    def test_list_posts(self):
-        # створюємо тестовий пост
-        with self.app.app_context():
-            post = Post(
-                title="Test Post",
-                content="Some content",
-                posted=datetime.utcnow(),
-                category="test",
-                is_active=True,
-                author="Tester"
-            )
-            db.session.add(post)
-            db.session.commit()
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True
+        )
 
-        response = self.client.get("/posts/")
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Test Post", response.data)
+        with context.begin_transaction():
+            context.run_migrations()
 
-    def test_create_post(self):
-        response = self.client.post("/posts/create", data={
-            "title": "New Post",
-            "content": "Some content",
-            "category": "news",
-            "enabled": True,
-            "publish_date": "2025-11-15"
-        }, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"New Post", response.data)
 
-    def test_post_detail(self):
-        with self.app.app_context():
-            post = Post(
-                title="Detail Post",
-                content="Detail content",
-                posted=datetime.utcnow(),
-                category="info",
-                is_active=True,
-                author="Tester"
-            )
-            db.session.add(post)
-            db.session.commit()
-            post_id = post.id
-
-        response = self.client.get(f"/posts/{post_id}")
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Detail Post", response.data)
-
-    def test_edit_post(self):
-        with self.app.app_context():
-            post = Post(
-                title="Edit Post",
-                content="Old content",
-                posted=datetime.utcnow(),
-                category="edit",
-                is_active=True,
-                author="Tester"
-            )
-            db.session.add(post)
-            db.session.commit()
-            post_id = post.id
-
-        response = self.client.post(f"/posts/{post_id}/update", data={
-            "title": "Edited Post",
-            "content": "Updated content",
-            "category": "edit",
-            "enabled": True,
-            "publish_date": "2025-11-16"
-        }, follow_redirects=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Edited Post", response.data)
-
-    def test_delete_post(self):
-        with self.app.app_context():
-            post = Post(
-                title="Delete Post",
-                content="Delete content",
-                posted=datetime.utcnow(),
-                category="delete",
-                is_active=True,
-                author="Tester"
-            )
-            db.session.add(post)
-            db.session.commit()
-            post_id = post.id
-
-        response = self.client.post(f"/posts/{post_id}/delete", follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(b"Delete Post", response.data)
-
-if __name__ == "__main__":
-    unittest.main()
+# запуск
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()

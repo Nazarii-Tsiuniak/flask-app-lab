@@ -1,0 +1,29 @@
+<div class="mb-3">
+  {{ form.title.label(class="form-label") }}
+  {{ form.title(class="form-control") }}
+  {% for e in form.title.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+</div>
+
+<div class="mb-3">
+  {{ form.description.label(class="form-label") }}
+  {{ form.description(class="form-control", rows="4") }}
+  {% for e in form.description.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+</div>
+
+<div class="mb-3">
+  {{ form.price.label(class="form-label") }}
+  {{ form.price(class="form-control") }}
+  {% for e in form.price.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+</div>
+
+<div class="mb-3">
+  {{ form.genre.label(class="form-label") }}
+  {{ form.genre(class="form-select") }}
+  {% for e in form.genre.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+</div>
+
+<div class="mb-3">
+  {{ form.image.label(class="form-label") }}
+  {{ form.image(class="form-control") }}
+  {% for e in form.image.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+</div>
